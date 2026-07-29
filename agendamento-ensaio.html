@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendamento de Ensaio Fotográfico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14181a;
+    --bg-alt:#1c2224;
+    --surface:#20272a;
+    --surface-hover:#262e31;
+    --text:#f2efea;
+    --text-muted:#95a3a6;
+    --accent:#c9a227;
+    --accent-soft:rgba(201,162,39,.14);
+    --border:#31393c;
+    --danger:#c96a4a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px 80px;}
+
+  /* ---- header ---- */
+  header{
+    padding:56px 20px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+    background:radial-gradient(ellipse at 50% 0%, var(--bg-alt) 0%, var(--bg) 70%);
+  }
+  .iris{width:64px;height:64px;margin:0 auto 20px;opacity:.9;}
+  header h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(28px,5vw,38px);
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    color:var(--text-muted);
+    font-size:15px;
+    margin:0;
+    max-width:420px;
+    margin:0 auto;
+  }
+  #studioNameDisplay{color:var(--accent);}
+
+  /* ---- sections ---- */
+  section.card{
+    margin-top:28px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:26px 24px 28px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.06em;
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .eyebrow::before{content:'';width:14px;height:1px;background:var(--accent);display:inline-block;}
+  h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:21px;
+    margin:2px 0 18px;
+  }
+
+  label{
+    display:block;
+    font-size:13px;
+    color:var(--text-muted);
+    margin:14px 0 6px;
+  }
+  label:first-of-type{margin-top:0;}
+  input[type=text], input[type=email], input[type=tel], input[type=date], input[type=time], textarea{
+    width:100%;
+    background:var(--bg-alt);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:11px 12px;
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+  }
+  input:focus, textarea:focus, .pkg-card:focus-visible, .pay-option:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:1px;
+  }
+  textarea{resize:vertical;min-height:70px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:480px){.row2{grid-template-columns:1fr;}}
+
+  /* ---- package cards ---- */
+  .pkg-list{display:flex;flex-direction:column;gap:12px;}
+  .pkg-card{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+    background:var(--bg-alt);
+  }
+  .pkg-card:hover{background:var(--surface-hover);}
+  .pkg-card.selected{border-color:var(--accent);background:var(--accent-soft);}
+  .pkg-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .pkg-name{font-family:'Fraunces',serif;font-size:18px;font-weight:600;}
+  .pkg-price{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:17px;white-space:nowrap;}
+  .pkg-meta{font-size:13px;color:var(--text-muted);margin-top:6px;}
+  .pkg-desc{font-size:13.5px;color:var(--text);margin-top:8px;line-height:1.5;}
+  .pkg-badge{
+    display:inline-block;margin-top:8px;font-size:11.5px;
+    background:var(--accent-soft);color:var(--accent);
+    padding:3px 9px;border-radius:20px;font-family:'JetBrains Mono',monospace;
+  }
+
+  /* ---- includes list ---- */
+  ul.includes{list-style:none;margin:0;padding:0;}
+  ul.includes li{
+    display:flex;gap:10px;padding:9px 0;
+    border-bottom:1px solid var(--border);
+    font-size:14px;color:var(--text);
+  }
+  ul.includes li:last-child{border-bottom:none;}
+  ul.includes li::before{content:'✓';color:var(--accent);font-weight:600;flex-shrink:0;}
+  .empty-hint{color:var(--text-muted);font-size:13.5px;font-style:italic;}
+
+  /* ---- pricing ---- */
+  .price-row{display:flex;justify-content:space-between;padding:9px 0;font-size:14.5px;border-bottom:1px solid var(--border);}
+  .price-row:last-child{border-bottom:none;}
+  .price-row.total{font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace;}
+  .price-row span:last-child{font-family:'JetBrains Mono',monospace;}
+
+  .pay-options{display:flex;gap:12px;margin-top:6px;}
+  .pay-option{
+    flex:1;text-align:center;border:1px solid var(--border);border-radius:8px;
+    padding:12px 8px;cursor:pointer;font-size:13.5px;background:var(--bg-alt);
+  }
+  .pay-option.selected{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+
+  /* ---- send button ---- */
+  .send-btn{
+    width:100%;margin-top:26px;
+    background:var(--accent);color:#1b1706;
+    border:none;border-radius:10px;
+    padding:16px;font-size:15.5px;font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+  .send-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .send-btn:not(:disabled):hover{filter:brightness(1.08);}
+  .status-msg{margin-top:12px;font-size:13.5px;text-align:center;color:var(--text-muted);}
+  .status-msg.err{color:var(--danger);}
+
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   CONFIGURAÇÕES DO FOTÓGRAFO — edite os valores abaixo quando quiser.
+   Depois de editar, salve o arquivo (ou dê "commit" no GitHub) e o site
+   atualiza sozinho. Não precisa mexer em mais nada no resto do código.
+   ========================================================================= */
+const CONFIG = {
+  studioName: 'Seu Estúdio de Fotografia',   // nome que aparece no topo da página
+  email: 'seuemail@exemplo.com',             // para onde vai o e-mail de agendamento
+  whatsapp: '5575999999999',                 // seu WhatsApp com DDI+DDD, só números
+  deliveryDays: 7,                           // prazo de entrega em dias úteis
+  depositPercent: 50,                        // % do sinal para reservar a data
+
+  packages: [
+    {
+      id: 'essencial',
+      nome: 'Essencial',
+      descricao: 'Um retrato direto e verdadeiro, sem excessos — ideal para quem quer atualizar as fotos sem grandes produções.',
+      fotos: 15,
+      duracao: '1 hora',
+      preco: 350,
+      maquiagem: false
+    },
+    {
+      id: 'premium',
+      nome: 'Premium',
+      descricao: 'Mais tempo de produção, com trocas de look e maquiagem incluída para um resultado mais elaborado.',
+      fotos: 30,
+      duracao: '2 horas',
+      preco: 650,
+      maquiagem: true
+    },
+    {
+      id: 'deluxe',
+      nome: 'Deluxe',
+      descricao: 'A experiência completa: tempo estendido, múltiplos looks, maquiagem profissional e um acervo generoso de imagens.',
+      fotos: 50,
+      duracao: '3 horas',
+      preco: 950,
+      maquiagem: true
+    }
+  ]
+};
+
+let selectedPkgId = null;
+let selectedPayment = null;
+
+function brl(n){
+  return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function irisSVG(){
+  return `<svg class="iris" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="30" stroke="#c9a227" stroke-width="1.2" opacity=".5"/>
+    <g stroke="#c9a227" stroke-width="1.4" opacity=".85">
+      <path d="M32 8 L40 26 L24 26 Z" transform="rotate(0 32 32)"/>
+      <path d="M32 8 L40 26 L24 26 Z" transform="rotate(60 32 32)"/>
+      <path d="M32 8 L40 26 L24 26 Z" transform="rotate(120 32 32)"/>
+      <path d="M32 8 L40 26 L24 26 Z" transform="rotate(180 32 32)"/>
+      <path d="M32 8 L40 26 L24 26 Z" transform="rotate(240 32 32)"/>
+      <path d="M32 8 L40 26 L24 26 Z" transform="rotate(300 32 32)"/>
+    </g>
+    <circle cx="32" cy="32" r="7" fill="#c9a227" opacity=".9"/>
+  </svg>`;
+}
+
+function includesFor(pkg){
+  const items = [
+    'Edição profissional das imagens (cor, contraste e limpeza de pele quando necessário)'
+  ];
+  if(pkg.maquiagem){
+    items.push('Maquiagem profissional incluída');
+  }
+  items.push('Entrega digital via link do Google Drive');
+  items.push(`Prazo de entrega: ${CONFIG.deliveryDays} dias úteis após a seleção das imagens`);
+  items.push('Autorização para uso das imagens em redes sociais e no portfólio do fotógrafo, para fins de divulgação');
+  return items;
+}
+
+function render(){
+  const app = document.getElementById('app');
+  app.className = '';
+  app.innerHTML = `
+    <header>
+      ${irisSVG()}
+      <h1>Agendamento de Ensaio</h1>
+      <p>Preencha seus dados e escolha o pacote ideal com <span id="studioNameDisplay">${CONFIG.studioName}</span>.</p>
+    </header>
+    <div class="wrap">
+
+      <section class="card">
+        <div class="eyebrow">f/1.4 — seus dados</div>
+        <h2>Informações de contato</h2>
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" placeholder="Seu nome">
+        <div class="row2">
+          <div>
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="voce@email.com">
+          </div>
+          <div>
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input type="tel" id="telefone" placeholder="(75) 99999-9999">
+          </div>
+        </div>
+        <div class="row2">
+          <div>
+            <label for="data">Data do ensaio</label>
+            <input type="date" id="data">
+          </div>
+          <div>
+            <label for="horario">Horário do ensaio</label>
+            <input type="time" id="horario">
+          </div>
+        </div>
+        <label for="local">Local do ensaio</label>
+        <input type="text" id="local" placeholder="Estúdio, praia, ao ar livre...">
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">f/2.8 — escolha o pacote</div>
+        <h2>Pacotes disponíveis</h2>
+        <div class="pkg-list" id="pkgList"></div>
+      </section>
+
+      <section class="card" id="includesSection" style="display:none;">
+        <div class="eyebrow">f/4 — o que está incluso</div>
+        <h2>Detalhes do pacote</h2>
+        <ul class="includes" id="includesList"></ul>
+      </section>
+
+      <section class="card" id="paymentSection" style="display:none;">
+        <div class="eyebrow">f/5.6 — valores e pagamento</div>
+        <h2>Investimento</h2>
+        <div id="priceBreakdown"></div>
+        <label style="margin-top:18px;">Forma de pagamento</label>
+        <div class="pay-options">
+          <div class="pay-option" data-pay="Pix" tabindex="0">Pix</div>
+          <div class="pay-option" data-pay="Cartão de crédito" tabindex="0">Cartão de crédito</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">f/8 — observações</div>
+        <h2>Algo mais?</h2>
+        <label for="obs">Observações (opcional)</label>
+        <textarea id="obs" placeholder="Referências, preferências, dúvidas..."></textarea>
+      </section>
+
+      <button class="send-btn" id="sendBtn" disabled>Enviar</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+  `;
+
+  renderPackages();
+
+  document.querySelectorAll('.pay-option').forEach(el=>{
+    el.onclick = ()=>{
+      selectedPayment = el.dataset.pay;
+      document.querySelectorAll('.pay-option').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+      validateForm();
+    };
+  });
+
+  ['nome','email','telefone','data','horario','local'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', validateForm);
+  });
+
+  document.getElementById('sendBtn').onclick = handleSend;
+}
+
+function renderPackages(){
+  const list = document.getElementById('pkgList');
+  list.innerHTML = CONFIG.packages.map(p => `
+    <div class="pkg-card" data-id="${p.id}" tabindex="0">
+      <div class="pkg-top">
+        <span class="pkg-name">${p.nome}</span>
+        <span class="pkg-price">${brl(p.preco)}</span>
+      </div>
+      <div class="pkg-meta">${p.fotos} fotos editadas · ${p.duracao} de ensaio</div>
+      ${p.descricao ? `<div class="pkg-desc">${p.descricao}</div>` : ''}
+      ${p.maquiagem ? '<span class="pkg-badge">inclui maquiagem</span>' : ''}
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.pkg-card').forEach(card=>{
+    card.onclick = ()=> selectPackage(card.dataset.id);
+    card.onkeydown = (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); selectPackage(card.dataset.id); } };
+  });
+}
+
+function selectPackage(id){
+  selectedPkgId = id;
+  document.querySelectorAll('.pkg-card').forEach(c=>c.classList.toggle('selected', c.dataset.id===id));
+
+  const pkg = CONFIG.packages.find(p=>p.id===id);
+
+  const includesSection = document.getElementById('includesSection');
+  includesSection.style.display = 'block';
+  document.getElementById('includesList').innerHTML = includesFor(pkg).map(i=>`<li>${i}</li>`).join('');
+
+  const paymentSection = document.getElementById('paymentSection');
+  paymentSection.style.display = 'block';
+  const deposit = pkg.preco * (CONFIG.depositPercent/100);
+  const remainder = pkg.preco - deposit;
+  document.getElementById('priceBreakdown').innerHTML = `
+    <div class="price-row total"><span>Valor total</span><span>${brl(pkg.preco)}</span></div>
+    <div class="price-row"><span>Sinal para reserva da data (${CONFIG.depositPercent}%)</span><span>${brl(deposit)}</span></div>
+    <div class="price-row"><span>Restante após a entrega das imagens</span><span>${brl(remainder)}</span></div>
+  `;
+
+  validateForm();
+}
+
+function validateForm(){
+  const required = ['nome','email','telefone','data','horario','local'];
+  const allFilled = required.every(id => document.getElementById(id).value.trim() !== '');
+  const ok = allFilled && selectedPkgId && selectedPayment;
+  document.getElementById('sendBtn').disabled = !ok;
+}
+
+function handleSend(){
+  const val = id => document.getElementById(id).value.trim();
+  const pkg = CONFIG.packages.find(p=>p.id===selectedPkgId);
+  const deposit = pkg.preco * (CONFIG.depositPercent/100);
+  const remainder = pkg.preco - deposit;
+  const obs = val('obs');
+
+  const lines = [
+    `Novo agendamento de ensaio - ${CONFIG.studioName}`,
+    '',
+    `Nome: ${val('nome')}`,
+    `E-mail: ${val('email')}`,
+    `Telefone: ${val('telefone')}`,
+    `Data do ensaio: ${val('data')}`,
+    `Horário: ${val('horario')}`,
+    `Local: ${val('local')}`,
+    '',
+    `Pacote escolhido: ${pkg.nome} (${pkg.fotos} fotos, ${pkg.duracao})`,
+    `Valor total: ${brl(pkg.preco)}`,
+    `Sinal (${CONFIG.depositPercent}%): ${brl(deposit)}`,
+    `Restante após entrega: ${brl(remainder)}`,
+    `Forma de pagamento: ${selectedPayment}`,
+  ];
+  if(obs) lines.push('', `Observações: ${obs}`);
+
+  const text = lines.join('\n');
+  const statusMsg = document.getElementById('statusMsg');
+  statusMsg.className = 'status-msg';
+  statusMsg.textContent = 'Preparando envio…';
+
+  const waText = encodeURIComponent(text);
+  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${waText}`, '_blank');
+
+  setTimeout(()=>{
+    const subject = encodeURIComponent(`Agendamento de ensaio - ${val('nome')}`);
+    const body = encodeURIComponent(text);
+    window.location.href = `mailto:${CONFIG.email}?subject=${subject}&body=${body}`;
+  }, 400);
+
+  statusMsg.textContent = 'Abrindo WhatsApp e e-mail com os dados preenchidos...';
+}
+
+render();
+</script>
+</body>
+</html>
