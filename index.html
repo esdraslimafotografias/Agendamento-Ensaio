@@ -178,9 +178,9 @@
    atualiza sozinho. Não precisa mexer em mais nada no resto do código.
    ========================================================================= */
 const CONFIG = {
-  studioName: 'Seu Estúdio de Fotografia',   // nome que aparece no topo da página
-  email: 'seuemail@exemplo.com',             // para onde vai o e-mail de agendamento
-  whatsapp: '5575999999999',                 // seu WhatsApp com DDI+DDD, só números
+  studioName: 'Esdras Lima Fotografia',      // nome que aparece no topo da página
+  email: 'esdraslima.fotografias@gmail.com', // para onde vai o e-mail de agendamento
+  whatsapp: '5575991721201',                 // seu WhatsApp com DDI+DDD, só números
   deliveryDays: 7,                           // prazo de entrega em dias úteis
   depositPercent: 50,                        // % do sinal para reservar a data
 
@@ -189,10 +189,10 @@ const CONFIG = {
       id: 'essencial',
       nome: 'Essencial',
       descricao: 'Um retrato direto e verdadeiro, sem excessos — ideal para quem quer atualizar as fotos sem grandes produções.',
-      fotos: 15,
+      fotos: 10,
       duracao: '1 hora',
-      preco: 350,
-      maquiagem: false
+      preco: 500,
+      maquiagemebabyliss: true
     },
     {
       id: 'premium',
@@ -201,7 +201,7 @@ const CONFIG = {
       fotos: 30,
       duracao: '2 horas',
       preco: 650,
-      maquiagem: true
+      maquiagemebabyliss: true
     },
     {
       id: 'deluxe',
@@ -210,7 +210,7 @@ const CONFIG = {
       fotos: 50,
       duracao: '3 horas',
       preco: 950,
-      maquiagem: true
+      maquiagemebabyliss: true
     }
   ]
 };
@@ -242,7 +242,7 @@ function includesFor(pkg){
     'Edição profissional das imagens (cor, contraste e limpeza de pele quando necessário)'
   ];
   if(pkg.maquiagem){
-    items.push('Maquiagem profissional incluída');
+    items.push('Maquiagem profissional incluída e baby liss');
   }
   items.push('Entrega digital via link do Google Drive');
   items.push(`Prazo de entrega: ${CONFIG.deliveryDays} dias úteis após a seleção das imagens`);
